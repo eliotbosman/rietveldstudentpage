@@ -5,6 +5,14 @@
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize all components
+  initMenuOverlay();
+  
+  // Initialize book shop if available
+  if (typeof initBookShop === 'function') {
+    initBookShop();
+  }
+  
   // Initialize scroll behavior
   initScrollBehavior();
   
@@ -23,10 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Initialize program items to be always open
-  initProgramItems();
-  
-  // Initialize menu overlay
-  initMenuOverlay();
+  if (typeof initProgramItems === 'function') {
+    initProgramItems();
+  }
 });
 
 /**
@@ -38,65 +45,81 @@ function initScrollBehavior() {
     gsap.registerPlugin(ScrollTrigger);
   }
   
-  const main = document.querySelector('main');
+  const body = document.body;
   const footer = document.querySelector('.sticky-footer');
   const sections = document.querySelectorAll('.section');
-  const footerLeft = document.querySelector('.footer-left');
-  const footerCenter = document.querySelector('.footer-center');
-  const footerRight = document.querySelector('.footer-right');
+  const footerLeft = document.querySelector('.footer-left a');
+  const footerCenter = document.querySelector('.footer-center a') || document.querySelector('.footer-center span');
+  const footerRight = document.querySelector('.footer-right a');
   
-  if (!main || !footer || !sections.length || !footerLeft || !footerCenter || !footerRight) {
+  if (!footer || !sections.length) {
+    console.log('Required elements for scroll behavior not found');
     return;
   }
   
+  if (!footerLeft || !footerCenter || !footerRight) {
+    console.log('Footer elements not found', { footerLeft, footerCenter, footerRight });
+    return;
+  }
+  
+  console.log('Initializing scroll behavior with', sections.length, 'sections');
+  
   // Update footer content based on current section
   function updateFooterContent() {
-    // Get the current section in view
-    const scrollPosition = main.scrollTop;
-    let currentSectionIndex = 0;
+    // Get the current scroll position
+    const scrollPosition = window.scrollY || window.pageYOffset;
+    let currentSectionIndex = -1;
     
     // Determine which section is currently in view
     sections.forEach((section, index) => {
-      const sectionTop = section.offsetTop;
+      const sectionTop = section.getBoundingClientRect().top + scrollPosition;
       const sectionHeight = section.offsetHeight;
+      const sectionBottom = sectionTop + sectionHeight;
       
-      if (scrollPosition >= sectionTop - 100 && 
-          scrollPosition < sectionTop + sectionHeight - 100) {
+      // Check if we're in this section
+      if (scrollPosition >= sectionTop - 100 && scrollPosition < sectionBottom - 100) {
         currentSectionIndex = index;
+        console.log('Current section:', index, section.id);
       }
     });
     
     // Update footer content based on current section
-    switch(currentSectionIndex) {
-      case 0: // First section
-        footerLeft.textContent = 'MENU';
-        footerCenter.textContent = 'WWW.RIETVELD.GRAPHICDE';
-        footerRight.innerHTML = '<a href="#" class="scroll-up-link">SCROLL UP</a>';
-        break;
-      case 1: // Second section
-        footerLeft.textContent = 'MENU';
-        footerCenter.textContent = 'EXHIBITION';
-        footerRight.innerHTML = '<a href="#" class="scroll-up-link">SCROLL UP</a>';
-        break;
-      case 2: // Third section
-        footerLeft.textContent = 'MENU';
-        footerCenter.textContent = 'PUBLIC PROGRAM';
-        footerRight.innerHTML = '<a href="#" class="scroll-up-link">SCROLL UP</a>';
-        break;
-      case 3: // Fourth section
-        footerLeft.textContent = 'MENU';
-        footerCenter.textContent = 'STUDENTS';
-        footerRight.innerHTML = '<a href="#" class="scroll-up-link">SCROLL UP</a>';
-        break;
-      default:
-        footerLeft.textContent = 'MENU';
-        footerCenter.textContent = 'SITE TITLE';
-        footerRight.innerHTML = '<a href="#" class="scroll-up-link">SCROLL UP</a>';
+    const siteTitle = document.querySelector('.site-title');
+    
+    // If we have a valid section index
+    if (currentSectionIndex >= 0 && currentSectionIndex < sections.length) {
+      const currentSection = sections[currentSectionIndex];
+      
+      // Get section title or ID
+      let sectionTitle = '';
+      
+      if (currentSection.id === 'main-section') {
+        sectionTitle = 'SITE TITLE';
+      } else if (currentSection.id === 'students-section') {
+        sectionTitle = 'STUDENTS';
+      } else if (currentSection.id === 'public-program-section') {
+        sectionTitle = 'PUBLIC PROGRAM';
+      } else if (currentSection.id === 'exhibition-info-section') {
+        sectionTitle = 'EXHIBITION INFO';
+      } else if (currentSection.id === 'book-shop-section') {
+        sectionTitle = 'BOOK SHOP';
+      } else {
+        sectionTitle = currentSection.querySelector('h2')?.textContent || 'SITE TITLE';
+      }
+      
+      // Update the site title
+      if (siteTitle) {
+        siteTitle.textContent = sectionTitle;
+      } else if (footerCenter) {
+        footerCenter.textContent = sectionTitle;
+      }
+      
+      console.log('Updated footer title to:', sectionTitle);
     }
   }
   
   // Listen for scroll events
-  main.addEventListener('scroll', updateFooterContent);
+  window.addEventListener('scroll', updateFooterContent);
   
   // Initial update
   updateFooterContent();
@@ -105,7 +128,7 @@ function initScrollBehavior() {
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('scroll-up-link')) {
       e.preventDefault();
-      main.scrollTo({
+      window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });

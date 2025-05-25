@@ -218,15 +218,20 @@ main .student-page {
   text-align: right;
 }
 
-/* Main Section with Vertical Columns */
 .vertical-columns {
   display: flex;
   height: 100%;
   width: 100%;
 }
 
-#main-section > div > div.column.gerrit-rietveld > div > a > h2{
-  font-size: var(--font-size-medium) !important;
+#main-section > div > div.column > div > a > h2{
+  font-size: var(--font-size-large) !important;
+}
+
+#main-section > div > div.column {
+  border-radius: 12vw !important;
+  border: 12pt black !important;
+  border-style: dotted double dashed solid !important;
 }
 
 .column {
@@ -247,7 +252,8 @@ main .student-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: black;
+  font-size: 8rem !important;
 }
 
 .graphic-design {
@@ -396,7 +402,6 @@ main .student-page {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Removed toggle indicators */
 
 .program-description {
   grid-column: 1 / 3;
@@ -466,13 +471,13 @@ main .student-page {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999; /* Increased z-index to ensure it's above all other content */
+  z-index: 9999; 
   display: none;
   overflow-y: auto;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background-color: #FFFF99; /* Yellow background as shown in sketch */
-  pointer-events: none; /* Don't block clicks when not active */
+  background-color: #FFFF99;
+  pointer-events: none; 
 }
 
 .menu-overlay.active {
@@ -480,12 +485,84 @@ main .student-page {
   opacity: 1 !important;
   align-items: center;
   justify-content: center;
-  pointer-events: auto; /* Allow interaction when active */
+  pointer-events: auto; 
   visibility: visible !important;
 }
 
 body.menu-open {
   overflow: hidden;
+}
+
+/* Book Shop Styles */
+#book-shop-section {
+  padding: 2rem 1rem;
+  padding-bottom: 2rem;
+}
+
+.section-title {
+  font-family: var(--font-hershey);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.book-shop-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .book-shop-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.book-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.book-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.book-item img:hover {
+  transform: scale(1.03);
+}
+
+.book-title {
+  font-family: var(--font-hershey);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.price-button {
+  background-color: var(--color-dark-blue);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-family: var(--font-hershey);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4vw;
+}
+
+.price-button:hover {
+  background-color: var(--color-light-blue);
+}
+
+.price-button.requested {
+  background-color: var(--color-light-blue);
 }
 
 .menu-overlay-inner {
@@ -502,7 +579,7 @@ body.menu-open {
   position: fixed;
   bottom: 0;
   left: 0;
-  background-color: #9966FF; /* Purple background as shown in sketch */
+  background-color: #9966FF;
   color: var(--color-dark);
 }
 
@@ -680,12 +757,12 @@ body.menu-open {
   height: calc(100dvh - var(--footer-height) - var(--footer-height));
   overflow: hidden;
   display: block;
-  margin-top: 40px; /* Add space for the fixed secondary header */
+  margin-top: 40px; 
 }
 
 @media (min-width: 769px) {
   .student-gallery {
-    height: calc(100dvh - 120px); /* Adjust height for desktop */
+    height: calc(100dvh - 120px);
   }
 }
 
@@ -703,7 +780,7 @@ body.menu-open {
 }
 
 .gallery-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none; 
 }
 
 .gallery-image-container {
@@ -714,7 +791,6 @@ body.menu-open {
   position: relative;
 }
 
-/* No active state needed as we're showing one image at a time */
 
 .student-gallery .gallery-image {
   width: 100%;
@@ -760,8 +836,8 @@ body.menu-open {
 @media (max-width: 768px) {
   .student-gallery {
     height: 100dvh;
-    margin-top: -60px; /* Extend up to cover the header area */
-    padding-top: 60px; /* Add padding to prevent content from being hidden under header */
+    margin-top: -60px; 
+    padding-top: 60px; 
     position: absolute;
     top: 0;
     left: 0;
@@ -780,8 +856,7 @@ body.menu-open {
     height: 100%;
   }
   
-  /* Exhibition info gallery styles */
-    /* Exhibition info gallery - mobile specific styles */
+    
   #exhibition-info-section .horizontal-gallery {
     display: flex;
     flex-direction: column;
@@ -790,7 +865,7 @@ body.menu-open {
   }
   
   #exhibition-info-section .gallery-content {
-    height: 70dvh; /* Reduced height to prevent overlap */
+    height: 100dvh;
     width: 100%;
     display: flex;
     overflow-x: auto;
@@ -864,7 +939,6 @@ body.menu-open {
   text-align: right;
 }
 
-/* Gallery controls moved to secondary footer */
 
 .gallery-prev,
 .gallery-next {
@@ -964,7 +1038,6 @@ body.menu-open {
   color: white;
 }
 
-/* Program Toggle Styles */
 .program-toggle-row {
   display: flex;
   justify-content: space-between;
@@ -1509,7 +1582,6 @@ body.menu-open {
   }
 }
 
-/* Animation Classes (for GSAP) */
 .fade-in {
   opacity: 0;
 }
